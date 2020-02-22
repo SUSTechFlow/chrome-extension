@@ -1,7 +1,7 @@
 {
-  "name": "new-tab-page",
+  "name": "sustech-flow",
   "version": "1.0.0",
-  "description": "A Vue.js web extension",
+  "description": "SUSTech Flow Chrome Extension",
   "author": "Wycer <wycers@gmail.com>",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --hide-modules",
