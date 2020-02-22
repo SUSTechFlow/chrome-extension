@@ -5,20 +5,26 @@ const CopyPlugin = require('copy-webpack-plugin');
 const ExtensionReloader = require('webpack-extension-reloader');
 const { VueLoaderPlugin } = require('vue-loader');
 const { version } = require('./package.json');
+const path = require('path');
+
+const resolve = dir => path.resolve(__dirname, dir);
 
 const config = {
   mode: process.env.NODE_ENV,
-  context: __dirname + '/src',
+  context: resolve('src'),
   entry: {
     background: './background.js',
     'popup/popup': './popup/popup.js',
   },
   output: {
-    path: __dirname + '/dist',
+    path: resolve('dist'),
     filename: '[name].js',
   },
   resolve: {
     extensions: ['.js', '.vue'],
+    alias: {
+      '@': resolve('src'), // 这样配置后 @ 可以指向 src 目录
+    },
   },
   module: {
     rules: [
@@ -42,12 +48,6 @@ const config = {
           'css-loader',
           {
             loader: 'sass-loader',
-            // Requires sass-loader@^7.0.0
-            options: {
-              implementation: require('sass'),
-              fiber: require('fibers'),
-              indentedSyntax: true, // optional
-            },
             // Requires sass-loader@^8.0.0
             options: {
               implementation: require('sass'),
@@ -64,18 +64,23 @@ const config = {
         loader: 'file-loader',
         options: {
           name: '[name].[ext]',
-          outputPath: '/images/',
+          outputPath: 'images',
           emitFile: false,
         },
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-          outputPath: '/fonts/',
-          emitFile: false,
-        },
+        test: /\.(eot|woff2?|ttf|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              name: '[name]-[hash:5].min.[ext]',
+              limit: 5000, // fonts file size <= 5KB, use 'base64'; else, output svg file
+              publicPath: 'fonts/',
+              outputPath: 'popup/fonts/',
+            },
+          },
+        ],
       },
     ],
   },
@@ -122,7 +127,7 @@ if (config.mode === 'production') {
 if (process.env.HMR === 'true') {
   config.plugins = (config.plugins || []).concat([
     new ExtensionReloader({
-      manifest: __dirname + '/src/manifest.json',
+      manifest: resolve('src/manifest.json'),
     }),
   ]);
 }

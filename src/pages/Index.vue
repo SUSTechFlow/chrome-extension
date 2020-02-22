@@ -1,34 +1,45 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img alt="Vuetify Logo" class="shrink mr-2" contain src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" transition="scale-transition" width="40" />
-
-        <v-img alt="Vuetify Name" class="shrink mt-1 hidden-sm-and-down" contain min-width="100" src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png" width="100" />
-      </div>
-
+    <v-app-bar app color="white" height="45px">
+      <v-toolbar-title class="ml-0 pl-1 mr-1">
+        <router-link :to="{ name: 'home' }" class="google-font" style="text-decoration:none; color: rgba(0,0,0,.87);">
+          SUSTech Flow
+        </router-link>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
-
-      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn @click="navigateToGithub" class="ml-0 google-font" style="text-transform: capitalize;" text>
+        Github
       </v-btn>
     </v-app-bar>
 
     <v-content>
-      <div>
-        <p>Hello world!!!</p>
-        <button @click="click">QwQ</button>
-        <button @click="test">QwwQ</button>
-      </div>
+      <v-container>
+        <v-list dense>
+          <v-subheader>Courses</v-subheader>
+          <v-list-item-group v-model="courses" color="primary">
+            <v-list-item v-for="(item, i) in courses" :key="i">
+              <v-list-item-content>
+                <v-list-item-title>{{ item.KCMC }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        <v-btn class="ma-2" :loading="loading" :disabled="loading" color="primary" @click="test">
+          Accept Terms
+        </v-btn>
+      </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
-    return {};
+    return {
+      loading: false,
+      courses: [],
+    };
   },
   created() {},
   methods: {
@@ -41,13 +52,20 @@ export default {
         });
       });
     },
+    navigateToGithub() {
+      chrome.tabs.create({ url: 'https://github.com/SUSTechFlow/chrome-extension' });
+    },
     async test() {
-      const res = await fetch('http://ehall.sustech.edu.cn/xhxsfw/sys/xsjwxx/educational/getMyScoreInfo.do?json=json&pageSize=233&pageNumber=1', {
-        credentials: 'include',
-        method: 'POST',
-        mode: 'cors',
-      });
-      console.log(res);
+      this.loading = true;
+      try {
+        const res = await axios.post('http://ehall.sustech.edu.cn/xhxsfw/sys/xsjwxx/educational/getMyScoreInfo.do?json=json&pageSize=233&pageNumber=1');
+        console.log(res);
+        this.courses = res.data.datas.pageAction.rows;
+      } catch (err) {
+        console.log('Error', err);
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
