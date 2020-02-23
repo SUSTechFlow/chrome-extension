@@ -11,7 +11,7 @@
       <v-btn to="/" class="ml-0 google-font" style="text-transform: capitalize;" text>
         Courses
       </v-btn>
-      <v-btn to="/comments" class="ml-0 google-font" style="text-transform: capitalize;" text>
+      <v-btn to="/comment" class="ml-0 google-font" style="text-transform: capitalize;" text>
         Comments
       </v-btn>
       <v-btn text icon small color="black" @click="navigateToGithub">
