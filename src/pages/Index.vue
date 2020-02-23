@@ -2,13 +2,13 @@
   <v-container>
     <v-row no-gutters>
       <v-col cols="6">
-        <Select :items="grades" label="Grade" :multiple="false"></Select>
+        <Select :items="grades" label="Grade" :multiple="false" @change="changeGrade"></Select>
       </v-col>
       <v-col cols="6">
-        <Select :items="majors" label="Major" :multiple="false"></Select>
+        <Select :items="majors" label="Major" :multiple="false" @change="changeMajor"></Select>
       </v-col>
     </v-row>
-    <Courses></Courses>
+    <Courses :grade="grade" :major="major"></Courses>
   </v-container>
 </template>
 <script>
@@ -24,7 +24,9 @@ export default {
   data() {
     return {
       majors: [],
-      grades: [...Array(9)].map((v, k) => k + 2011).reverse(),
+      grades: [...Array(9)].map((v, k) => (k + 2011).toString()).reverse(),
+      major: '',
+      grade: '',
     };
   },
   created() {},
@@ -43,6 +45,13 @@ export default {
         const res = await axios.get('https://sustechflow.top/api/major');
         this.majors = res.data.data;
       } catch (err) {}
+    },
+    changeMajor(v) {
+      this.major = v || '';
+    },
+    changeGrade(v) {
+      this.grade = v || '';
+      console.log(this.grade);
     },
   },
   mounted() {

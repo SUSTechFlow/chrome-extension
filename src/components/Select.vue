@@ -68,9 +68,9 @@ export default {
       default: false,
     },
   },
-  data: () => ({
-    selected: [],
-  }),
+  data() {
+    return { selected: this.multiple ? [] : '' };
+  },
   computed: {
     isSelectAll() {
       return this.selected.length === this.items.length;
@@ -86,7 +86,9 @@ export default {
   },
   watch: {
     selected() {
-      this.$emit('change', this.selected);
+      if (this.multiple) this.$emit('change', this.selected);
+      else if (this.selected.length === 0) this.$emit('change', null);
+      else this.$emit('change', this.selected);
     },
   },
   created() {
