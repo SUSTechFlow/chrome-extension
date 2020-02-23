@@ -1,17 +1,30 @@
 <template>
   <v-container>
+    <v-row no-gutters>
+      <v-col cols="6">
+        <Select :items="grades" label="Grade" :multiple="false"></Select>
+      </v-col>
+      <v-col cols="6">
+        <Select :items="majors" label="Major" :multiple="false"></Select>
+      </v-col>
+    </v-row>
     <Courses></Courses>
   </v-container>
 </template>
 <script>
+import axios from 'axios';
+import Select from '@/components/Select';
 import Courses from '@/components/Courses';
+// import axios from 'axios';
 export default {
   components: {
     Courses,
+    Select,
   },
   data() {
     return {
-      courses: null,
+      majors: [],
+      grades: [...Array(9)].map((v, k) => k + 2011).reverse(),
     };
   },
   created() {},
@@ -25,6 +38,15 @@ export default {
         });
       });
     },
+    async fetch() {
+      try {
+        const res = await axios.get('https://sustechflow.top/api/major');
+        this.majors = res.data.data;
+      } catch (err) {}
+    },
+  },
+  mounted() {
+    this.fetch();
   },
 };
 </script>
