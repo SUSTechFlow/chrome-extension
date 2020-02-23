@@ -15,7 +15,7 @@
         Comments
       </v-btn>
       <v-btn text icon small color="black" @click="navigateToGithub">
-        <v-icon>mdi-github-circle</v-icon>
+        <v-icon>{{ githubIcon }}</v-icon>
       </v-btn>
     </v-app-bar>
     <v-content>
@@ -25,7 +25,13 @@
 </template>
 
 <script>
+import { mdiGithubCircle } from '@mdi/js';
 export default {
+  data() {
+    return {
+      githubIcon: mdiGithubCircle,
+    };
+  },
   methods: {
     navigateToGithub() {
       chrome.tabs.create({ url: 'https://github.com/SUSTechFlow/chrome-extension' });
