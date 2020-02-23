@@ -25,9 +25,6 @@ export default {
         });
       });
     },
-    navigateToGithub() {
-      chrome.tabs.create({ url: 'https://github.com/SUSTechFlow/chrome-extension' });
-    },
   },
 };
 </script>

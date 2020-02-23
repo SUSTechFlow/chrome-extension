@@ -7,8 +7,15 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="navigateToGithub" class="ml-0 google-font" style="text-transform: capitalize;" text>
-        Github
+
+      <v-btn to="/" class="ml-0 google-font" style="text-transform: capitalize;" text>
+        Courses
+      </v-btn>
+      <v-btn to="/comments" class="ml-0 google-font" style="text-transform: capitalize;" text>
+        Comments
+      </v-btn>
+      <v-btn text icon small color="black" @click="navigateToGithub">
+        <v-icon>mdi-github-circle</v-icon>
       </v-btn>
     </v-app-bar>
     <v-content>
@@ -19,8 +26,10 @@
 
 <script>
 export default {
-  data() {
-    return {};
+  methods: {
+    navigateToGithub() {
+      chrome.tabs.create({ url: 'https://github.com/SUSTechFlow/chrome-extension' });
+    },
   },
 };
 </script>
